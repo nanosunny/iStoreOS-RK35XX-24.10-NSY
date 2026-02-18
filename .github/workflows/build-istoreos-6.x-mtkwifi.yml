@@ -138,9 +138,7 @@ jobs:
         sed -i -E 's/^(CONFIG_TARGET_DEVICE_rockchip_armv8_DEVICE_[_a-zA-Z0-9-]+)=y$/# \1 is not set/' openwrt/.config
         getconfig=$(cat ${GITHUB_WORKSPACE}/armv8/g68_mtk_wifi.config)
         echo "$getconfig" >> openwrt/.config
-        cat "${GITHUB_WORKSPACE}/configfiles/config-6.6.local" >> openwrt/target/linux/rockchip/armv8/config-6.6
         # cat openwrt/.config
-        # cat openwrt/target/linux/rockchip/armv8/config-6.6
         chmod +x $DIY_P2_SH
         cd openwrt
         $GITHUB_WORKSPACE/$DIY_P2_SH

@@ -14,8 +14,8 @@
 #include "rk3568-ramoops.dtsi"
 
 / {
-	model = "NSY-G68 AX3000 Router";
-	compatible = "nsy,g68-plus", "rockchip,rk3568";
+	model = "BDY-G18 AX3000 Router";
+	compatible = "bdy,g18-pro", "rockchip,rk3568";
 
 	aliases {
 		ethernet0 = &gmac0;
@@ -332,7 +332,6 @@
 		pinctrl-1 = <&soc_slppin_slp &rk817_slppin_slp>;
 		pinctrl-2 = <&soc_slppin_gpio &rk817_slppin_pwrdn>;
 		pinctrl-3 = <&soc_slppin_gpio &rk817_slppin_rst>;
-		rockchip,system-power-controller;
 		wakeup-source;
 		#clock-cells = <1>;
 		clock-output-names = "rk808-clkout1\0rk808-clkout2";
@@ -640,7 +639,7 @@
 			rockchip,pins = <0 RK_PC3 RK_FUNC_GPIO &pcfg_pull_none>;
 		};
 		pcie30x2_reset_h: pcie30x2-reset-h {
-			rockchip,pins = <0 RK_PC6 RK_FUNC_GPIO &pcfg_pull_none>;
+			rockchip,pins = <4 RK_PC4 RK_FUNC_GPIO &pcfg_pull_none>;
 		};
 		pcie2x1_reset_h: pcie2x1-reset-h {
 			rockchip,pins = <3 RK_PC1 RK_FUNC_GPIO &pcfg_pull_none>;
@@ -703,14 +702,14 @@
 		reset-gpios = <&gpio0 RK_PC3 GPIO_ACTIVE_HIGH>;
 		num-lanes = <0x1>; /*可能不生效,但是拆分需要打补丁,如果是吧,打补丁*/
 		pinctrl-0 = <&pcie30x1_reset_h>;
-		status = "okay";
+		status = "disabled";
 };
 
 //fe280000
 &pcie3x2 {
 		vpcie3v3-supply = <&vcc3v3_pcie>;
-		reset-gpios = <&gpio0 RK_PC6 GPIO_ACTIVE_HIGH>;
-		num-lanes = <0x1>;
+		reset-gpios = <&gpio4 RK_PC4 GPIO_ACTIVE_HIGH>;
+		num-lanes = <0x2>;
 		pinctrl-0 = <&pcie30x2_reset_h>;
 		rockchip,perst-inactive-ms = <500>;
 		status = "okay";

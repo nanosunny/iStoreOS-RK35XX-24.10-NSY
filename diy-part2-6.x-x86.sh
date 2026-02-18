@@ -24,7 +24,7 @@ CONFIG_PACKAGE_luci-nginx=y
 CONFIG_PACKAGE_default-settings=y" >> .config
 
 
-# 追加binder内核参数
+# 追加自定义内核配置项
 echo "CONFIG_PSI=y
 CONFIG_KPROBES=y" >> target/linux/x86/64/config-6.6
 

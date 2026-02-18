@@ -17,9 +17,10 @@ cp -a $GITHUB_WORKSPACE/configfiles/etc/* package/base-files/files/etc/
 # ls package/base-files/files/etc/
 
 
-# 追加binder内核参数
+# 追加自定义内核配置项
 echo "CONFIG_PSI=y
 CONFIG_KPROBES=y" >> target/linux/rockchip/armv8/config-6.6
+cat "${GITHUB_WORKSPACE}/configfiles/config-6.6-mtkwifi.local" >> target/linux/rockchip/armv8/config-6.6
 
 
 # 集成CPU性能跑分脚本
@@ -63,9 +64,7 @@ chmod 755 package/base-files/files/etc/init.d/swconfig_install
 [ -f "package/network/config/wifi-scripts/files/sbin/wifi" ] && rm -f package/network/config/wifi-scripts/files/sbin/wifi
 cp -f $GITHUB_WORKSPACE/configfiles/opwifi package/base-files/files/etc/init.d/opwifi
 chmod 755 package/base-files/files/etc/init.d/opwifi
-# 默认启用WiFi，系统开机后自动初始化无线功能，系统已加 “50-wifi-up” 脚本文件，这个地方注释掉
-# cp -f $GITHUB_WORKSPACE/configfiles/g68_mtkwifi package/base-files/files/etc/init.d/g68_mtkwifi
-# chmod 755 package/base-files/files/etc/init.d/g68_mtkwifi
+cp -f $GITHUB_WORKSPACE/configfiles/rc.local package/base-files/files/etc/rc.local
 
 
 # 电工大佬的rtl8367b驱动资源包，暂时使用这样替换
@@ -74,5 +73,5 @@ tar -xvf rtl8367b.tar.gz
 
 
 # 复制dts设备树文件到指定目录下
-cp -f $GITHUB_WORKSPACE/configfiles/dts/rk3588-orangepi-5-plus.dts target/linux/rockchip/dts/rk3588/rk3588-orangepi-5-plus.dts
-cp -f $GITHUB_WORKSPACE/configfiles/dts/rk3568-nsy-g68-plus.dts target/linux/rockchip/dts/rk3568/rk3568-nsy-g68-plus.dts
+cp -a $GITHUB_WORKSPACE/configfiles/dts/rk3568/* target/linux/rockchip/dts/rk3568/
+cp -a $GITHUB_WORKSPACE/configfiles/dts/rk3588/* target/linux/rockchip/dts/rk3588/
