@@ -220,7 +220,7 @@
 		vin-supply = <&vcc3v3_sys>;
 	};
 
-	vcc3v3_bu: c3v3_buvcc3v3-bu {
+	vcc3v3_bu: vcc3v3-bu {
 		compatible = "regulator-fixed";
 		regulator-name = "vcc3v3_bu";
 		regulator-always-on;
