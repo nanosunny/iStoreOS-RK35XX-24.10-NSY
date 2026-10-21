@@ -34,7 +34,7 @@ git clone --depth=1 -b main https://github.com/xiaomeng9597/istoreos-settings pa
 
 
 # 定时限速插件
-git clone --depth=1 https://github.com/sirpdboy/luci-app-eqosplus package/luci-app-eqosplus
+# git clone --depth=1 https://github.com/sirpdboy/luci-app-eqosplus package/luci-app-eqosplus
 
 
 
