@@ -50,25 +50,25 @@ TARGET_DEVICES += nsy_g68-plus" >> target/linux/rockchip/image/legacy.mk
 
 
 # 增加nsy_g16-plus
-echo -e "\\ndefine Device/nsy_g16-plus
-\$(call Device/Legacy/rk3568,\$(1))
-  DEVICE_VENDOR := NSY
-  DEVICE_MODEL := G16
-  DEVICE_DTS := rk3568/rk3568-nsy-g16-plus
-  DEVICE_PACKAGES += kmod-nvme kmod-ata-ahci-dwc kmod-hwmon-pwmfan kmod-thermal kmod-switch-rtl8306 kmod-switch-rtl8366-smi kmod-switch-rtl8366rb kmod-switch-rtl8366s kmod-switch-rtl8367b swconfig kmod-swconfig kmod-r8169 kmod-mt7615-firmware
-endef
-TARGET_DEVICES += nsy_g16-plus" >> target/linux/rockchip/image/legacy.mk
+# echo -e "\\ndefine Device/nsy_g16-plus
+# \$(call Device/Legacy/rk3568,\$(1))
+#   DEVICE_VENDOR := NSY
+#   DEVICE_MODEL := G16
+#   DEVICE_DTS := rk3568/rk3568-nsy-g16-plus
+#   DEVICE_PACKAGES += kmod-nvme kmod-ata-ahci-dwc kmod-hwmon-pwmfan kmod-thermal kmod-switch-rtl8306 kmod-switch-rtl8366-smi kmod-switch-rtl8366rb kmod-switch-rtl8366s kmod-switch-rtl8367b swconfig kmod-swconfig kmod-r8169 kmod-mt7615-firmware
+# endef
+# TARGET_DEVICES += nsy_g16-plus" >> target/linux/rockchip/image/legacy.mk
 
 
 # 增加bdy_g18-pro
-echo -e "\\ndefine Device/bdy_g18-pro
-\$(call Device/Legacy/rk3568,\$(1))
-  DEVICE_VENDOR := BDY
-  DEVICE_MODEL := G18
-  DEVICE_DTS := rk3568/rk3568-bdy-g18-pro
-  DEVICE_PACKAGES += kmod-nvme kmod-ata-ahci-dwc kmod-hwmon-pwmfan kmod-thermal kmod-switch-rtl8306 kmod-switch-rtl8366-smi kmod-switch-rtl8366rb kmod-switch-rtl8366s kmod-switch-rtl8367b swconfig kmod-swconfig kmod-r8169 kmod-mt7615-firmware
-endef
-TARGET_DEVICES += bdy_g18-pro" >> target/linux/rockchip/image/legacy.mk
+# echo -e "\\ndefine Device/bdy_g18-pro
+# \$(call Device/Legacy/rk3568,\$(1))
+#   DEVICE_VENDOR := BDY
+#   DEVICE_MODEL := G18
+#   DEVICE_DTS := rk3568/rk3568-bdy-g18-pro
+#   DEVICE_PACKAGES += kmod-nvme kmod-ata-ahci-dwc kmod-hwmon-pwmfan kmod-thermal kmod-switch-rtl8306 kmod-switch-rtl8366-smi kmod-switch-rtl8366rb kmod-switch-rtl8366s kmod-switch-rtl8367b swconfig kmod-swconfig kmod-r8169 kmod-mt7615-firmware
+# endef
+# TARGET_DEVICES += bdy_g18-pro" >> target/linux/rockchip/image/legacy.mk
 
 
 # 复制 02_network 网络配置文件到 target/linux/rockchip/armv8/base-files/etc/board.d/ 目录下
