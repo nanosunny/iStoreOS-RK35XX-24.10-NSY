@@ -23,14 +23,14 @@ CONFIG_KPROBES=y" >> target/linux/rockchip/armv8/config-6.6
 
 
 # 集成CPU性能跑分脚本
-cp -f $GITHUB_WORKSPACE/configfiles/coremark/coremark-arm64 package/base-files/files/bin/coremark-arm64
-cp -f $GITHUB_WORKSPACE/configfiles/coremark/coremark-arm64.sh package/base-files/files/bin/coremark.sh
-chmod 755 package/base-files/files/bin/coremark-arm64
-chmod 755 package/base-files/files/bin/coremark.sh
+# cp -f $GITHUB_WORKSPACE/configfiles/coremark/coremark-arm64 package/base-files/files/bin/coremark-arm64
+# cp -f $GITHUB_WORKSPACE/configfiles/coremark/coremark-arm64.sh package/base-files/files/bin/coremark.sh
+# chmod 755 package/base-files/files/bin/coremark-arm64
+# chmod 755 package/base-files/files/bin/coremark.sh
 
 
 # iStoreOS-settings
-git clone --depth=1 -b main https://github.com/xiaomeng9597/istoreos-settings package/default-settings
+# git clone --depth=1 -b main https://github.com/xiaomeng9597/istoreos-settings package/default-settings
 
 
 # 定时限速插件
