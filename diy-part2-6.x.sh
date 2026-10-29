@@ -89,7 +89,7 @@ chmod 755 package/base-files/files/etc/init.d/opwifi
 
 
 # 电工大佬的rtl8367b驱动资源包，暂时使用这样替换
-wget https://github.com/xiaomeng9597/files/releases/download/files/rtl8367b.tar.gz
+wget https://github.com/nanosunny/files/releases/download/files/rtl8367b.tar.gz
 tar -xvf rtl8367b.tar.gz
 
 
