@@ -106,9 +106,23 @@ cp -a $GITHUB_WORKSPACE/configfiles/dts/rk3568/* target/linux/rockchip/dts/rk356
 
 # ===== 修复 iStoreOS 25.12 apk 包冲突：nginx-ssl-util 覆盖 base-files =====
 # 给 package install 阶段加 --force-overwrite
-find include/ package/ -maxdepth 3 -name "*.mk" -exec grep -l "apk add" {} \; 2>/dev/null | \
-    xargs -r sed -i 's|\bapk add \$(|apk add --force-overwrite $(|g; s|\bapk add --|apk add --force-overwrite --|g; s|\bapk add -|apk add --force-overwrite -|g'
+# find include/ package/ -maxdepth 3 -name "*.mk" -exec grep -l "apk add" {} \; 2>/dev/null | \
+#    xargs -r sed -i 's|\bapk add \$(|apk add --force-overwrite $(|g; s|\bapk add --|apk add --force-overwrite --|g; s|\bapk add -|apk add --force-overwrite -|g'
 
 # 兜底：设置 apk 全局默认强制覆盖（若存在 apk world/repositories 配置）
-grep -q "force-overwrite" package/system/opkg/Makefile 2>/dev/null || \
+#grep -q "force-overwrite" package/system/opkg/Makefile 2>/dev/null || \
     sed -i 's|--no-cache|--force-overwrite --no-cache|g' package/system/opkg/Makefile 2>/dev/null || true
+
+# ===== 修复：阻止 feeds 版 nginx-ssl-util 覆盖 iStoreOS 自带的 nginx 配置 =====
+# 1) 先删掉 nginx-util 包里那两个冲突文件的安装指令
+#find feeds -path "*/nginx-util/Makefile" 2>/dev/null | while read mk; do
+#    sed -i 's|^[^#]*etc/config/nginx[[:space:]]*\\||g; s|^[^#]*etc/nginx/uci.conf.template[[:space:]]*\\||g' "$mk"
+    # 同时把这两个文件从 conffiles 里删
+#    sed -i '/etc\/config\/nginx/d; /etc\/nginx\/uci.conf.template/d' "$mk"
+
+done
+# 2) 若 feeds 里的包 Makefile 还有 CONFLICTS 字段，避免冲突检测
+find feeds -path "*/nginx-util/Makefile" -o -path "*/nginx/Makefile" 2>/dev/null | while read mk; do
+    # 追加一行给它标注成与 base-files 无冲突（可选）
+    grep -q "^CONFLICTS:=" "$mk" && echo 'CONFLICTS+= base-files' >> "$mk"
+done
