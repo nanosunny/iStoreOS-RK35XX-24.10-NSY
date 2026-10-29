@@ -17,9 +17,14 @@ cp -a $GITHUB_WORKSPACE/configfiles/etc/* package/base-files/files/etc/
 # ls package/base-files/files/etc/
 
 
-# 追加自定义内核配置项
+# 追加自定义内核配置项 
 echo "CONFIG_PSI=y
-CONFIG_KPROBES=y" >> target/linux/rockchip/armv8/config-6.6
+CONFIG_KPROBES=y" >> target/linux/rockchip/armv8/config-6.12
+
+# 动态探测内核版本 暂时不用
+# KVER=$(ls target/linux/rockchip/armv8/ | grep -oE 'config-[0-9]+\.[0-9]+' | head -1)
+# echo "CONFIG_PSI=y
+# CONFIG_KPROBES=y" >> target/linux/rockchip/armv8/${KVER}
 
 
 # 集成CPU性能跑分脚本
@@ -30,7 +35,7 @@ CONFIG_KPROBES=y" >> target/linux/rockchip/armv8/config-6.6
 
 
 # iStoreOS-settings
-# git clone --depth=1 -b main https://github.com/xiaomeng9597/istoreos-settings package/default-settings
+# git clone --depth=1 -b main https://github.com/nanosunny/istoreos-settings package/default-settings
 
 
 # 定时限速插件
@@ -44,7 +49,8 @@ echo -e "\\ndefine Device/nsy_g68-plus
   DEVICE_VENDOR := NSY
   DEVICE_MODEL := G68
   DEVICE_DTS := rk3568/rk3568-nsy-g68-plus
-  DEVICE_PACKAGES += kmod-nvme kmod-ata-ahci-dwc kmod-hwmon-pwmfan kmod-thermal kmod-switch-rtl8306 kmod-switch-rtl8366-smi kmod-switch-rtl8366rb kmod-switch-rtl8366s kmod-switch-rtl8367b swconfig kmod-swconfig kmod-r8169 kmod-mt7916-firmware
+  DEVICE_PACKAGES += kmod-nvme kmod-ata-ahci-dwc kmod-hwmon-pwmfan kmod-thermal kmod-net-dsa-realtek kmod-r8169 kmod-mt7916-firmware
+  # DEVICE_PACKAGES += kmod-nvme kmod-ata-ahci-dwc kmod-hwmon-pwmfan kmod-thermal kmod-switch-rtl8306 kmod-switch-rtl8366-smi kmod-switch-rtl8366rb kmod-switch-rtl8366s kmod-switch-rtl8367b swconfig kmod-swconfig kmod-r8169 kmod-mt7916-firmware
 endef
 TARGET_DEVICES += nsy_g68-plus" >> target/linux/rockchip/image/legacy.mk
 
@@ -88,11 +94,11 @@ cp -f $GITHUB_WORKSPACE/configfiles/opwifi package/base-files/files/etc/init.d/o
 chmod 755 package/base-files/files/etc/init.d/opwifi
 
 
-# 电工大佬的rtl8367b驱动资源包，暂时使用这样替换
-wget https://github.com/xiaomeng9597/files/releases/download/files/rtl8367b.tar.gz
-tar -xvf rtl8367b.tar.gz
+# 电工大佬的rtl8367b驱动资源包，暂时使用这样替换 6.12主线已改用DSA
+# wget https://github.com/nanosunny/files/releases/download/files/rtl8367b.tar.gz
+# tar -xvf rtl8367b.tar.gz
 
 
 # 复制dts设备树文件到指定目录下
 cp -a $GITHUB_WORKSPACE/configfiles/dts/rk3568/* target/linux/rockchip/dts/rk3568/
-cp -a $GITHUB_WORKSPACE/configfiles/dts/rk3588/* target/linux/rockchip/dts/rk3588/
+# cp -a $GITHUB_WORKSPACE/configfiles/dts/rk3588/* target/linux/rockchip/dts/rk3588/
