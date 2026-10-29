@@ -102,3 +102,13 @@ chmod 755 package/base-files/files/etc/init.d/opwifi
 # 复制dts设备树文件到指定目录下
 cp -a $GITHUB_WORKSPACE/configfiles/dts/rk3568/* target/linux/rockchip/dts/rk3568/
 # cp -a $GITHUB_WORKSPACE/configfiles/dts/rk3588/* target/linux/rockchip/dts/rk3588/
+
+
+# ===== 修复 iStoreOS 25.12 apk 包冲突：nginx-ssl-util 覆盖 base-files =====
+# 给 package install 阶段加 --force-overwrite
+find include/ package/ -maxdepth 3 -name "*.mk" -exec grep -l "apk add" {} \; 2>/dev/null | \
+    xargs -r sed -i 's|\bapk add \$(|apk add --force-overwrite $(|g; s|\bapk add --|apk add --force-overwrite --|g; s|\bapk add -|apk add --force-overwrite -|g'
+
+# 兜底：设置 apk 全局默认强制覆盖（若存在 apk world/repositories 配置）
+grep -q "force-overwrite" package/system/opkg/Makefile 2>/dev/null || \
+    sed -i 's|--no-cache|--force-overwrite --no-cache|g' package/system/opkg/Makefile 2>/dev/null || true
