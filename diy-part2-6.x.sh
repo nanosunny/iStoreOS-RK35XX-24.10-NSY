@@ -49,7 +49,8 @@ echo -e "\\ndefine Device/nsy_g68-plus
   DEVICE_VENDOR := NSY
   DEVICE_MODEL := G68
   DEVICE_DTS := rk3568/rk3568-nsy-g68-plus
-  DEVICE_PACKAGES += kmod-nvme kmod-ata-ahci-dwc kmod-hwmon-pwmfan kmod-thermal kmod-switch-rtl8306 kmod-switch-rtl8366-smi kmod-switch-rtl8366rb kmod-switch-rtl8366s kmod-switch-rtl8367b swconfig kmod-swconfig kmod-r8169 kmod-mt7916-firmware
+  DEVICE_PACKAGES += kmod-nvme kmod-ata-ahci-dwc kmod-hwmon-pwmfan kmod-thermal kmod-net-dsa-realtek kmod-r8169 kmod-mt7916-firmware
+  # DEVICE_PACKAGES += kmod-nvme kmod-ata-ahci-dwc kmod-hwmon-pwmfan kmod-thermal kmod-switch-rtl8306 kmod-switch-rtl8366-smi kmod-switch-rtl8366rb kmod-switch-rtl8366s kmod-switch-rtl8367b swconfig kmod-swconfig kmod-r8169 kmod-mt7916-firmware
 endef
 TARGET_DEVICES += nsy_g68-plus" >> target/linux/rockchip/image/legacy.mk
 
