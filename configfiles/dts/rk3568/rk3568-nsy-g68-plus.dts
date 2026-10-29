@@ -2,6 +2,11 @@
 
 /dts-v1/;
 
+/*
+ * Ported from ophub/unifreq linux-6.12.y rk3568-nsy-g68-plus.dts for iStoreOS 25.12:
+ * use iStoreOS rk3568 ip/ramoops dtsi; drop BSP-only fiq-debugger/rtlgsw/xpcs nodes;
+ * gmac1 SGMII (xpcs) is not supported by mainline dwmac-rk, switch uses gmac0 RGMII via DSA.
+ */
 #include <dt-bindings/gpio/gpio.h>
 #include <dt-bindings/pwm/pwm.h>
 #include <dt-bindings/leds/common.h>
@@ -11,6 +16,7 @@
 #include <rockchip/rk3568.dtsi>
 #include "rk3568-ip.dtsi"
 #include "rk3568-ip-rk809.dtsi"
+
 #include "rk3568-ramoops.dtsi"
 
 / {
@@ -19,6 +25,7 @@
 
 	aliases {
 		ethernet0 = &gmac0;
+		ethernet1 = &gmac1;
 		mmc0 = &sdhci;
 	};
 
@@ -26,27 +33,8 @@
 		stdout-path = "serial2:1500000n8";
 	};
 
-	fiq-debugger {
-		compatible = "rockchip,fiq-debugger";
-		rockchip,serial-id = <2>;
-		rockchip,wake-irq = <0>;
-		/* If enable uart uses irq instead of fiq */
-		rockchip,irq-mode-enable = <1>;
-		rockchip,baudrate = <1500000>;  /* Only 115200 and 1500000 */
-		interrupts = <GIC_SPI 252 IRQ_TYPE_LEVEL_LOW>;
-		pinctrl-names = "default";
-		pinctrl-0 = <&uart2m0_xfer>;
-		status = "okay";
-	};
-
-	debug: debug@fd904000 {
-		compatible = "rockchip,debug";
-		reg = <0x0 0xfd904000 0x0 0x1000>,
-			<0x0 0xfd905000 0x0 0x1000>,
-			<0x0 0xfd906000 0x0 0x1000>,
-			<0x0 0xfd907000 0x0 0x1000>;
-	};
-
+	
+	debug: 
 	dc_12v: dc-12v {
 		compatible = "regulator-fixed";
 		regulator-name = "dc_12v";
@@ -219,6 +207,7 @@
 		vin-supply = <&vcc3v3_sys>;
 	};
 
+	/* Fix the node name typo */
 	vcc3v3_bu: vcc3v3-bu {
 		compatible = "regulator-fixed";
 		regulator-name = "vcc3v3_bu";
@@ -255,26 +244,8 @@
 		regulator-boot-on;
 	};
 
-	xpcs: syscon@fda00000 {
-		compatible = "rockchip,rk3568-xpcs", "syscon";
-		reg = <0x0 0xfda00000 0x0 0x200000>;
-		status = "disabled";
-	};
-
-	gmac0_xpcsclk: xpcs-gmac0-clock {
-		compatible = "fixed-clock";
-		clock-frequency = <125000000>;
-		clock-output-names = "clk_gmac0_xpcs_mii";
-		#clock-cells = <0>;
-	};
-
-	gmac1_xpcsclk: xpcs-gmac1-clock {
-		compatible = "fixed-clock";
-		clock-frequency = <125000000>;
-		clock-output-names = "clk_gmac1_xpcs_mii";
-		#clock-cells = <0>;
-	};
-
+	
+	
 	adc_keys: adc-keys {
 		compatible = "adc-keys";
 		io-channels = <&saradc 0>;
@@ -300,21 +271,6 @@
 		};
 	};
 
-	rtlgsw@0 {
-		compatible = "realtek,rtl8367s";
-		realtek,mdio = <&mdio0>;
-		mii-bus = <&mdio0>;
-		realtek,id = <29>;
-		phy-id = <29>;
-		cpu_port = <7>;
-
-		//txdelay, rxdelay, mode, ability.force_mode, ability.txpause, ability.rxpause, ability.link, ability.duplex, speed
-		//sgmii,
-		realtek,extif1 = <0 0 11 1 1 1 1 1 2>;
-		//rgmii
-		realtek,extif2 = <0 0 1 1 1 1 1 1 2>;
-		status = "okay";
-	};
 };
 
 &i2c0 {
@@ -617,7 +573,7 @@
 
 	pmic {
 	
-		pmic_int: pmic-int {
+		pmic_int: pmic-intl {
 			rockchip,pins = <0 RK_PA3 RK_FUNC_GPIO &pcfg_pull_up>;
 		};
 	
@@ -709,10 +665,9 @@
 &pcie3x2 {
 		vpcie3v3-supply = <&vcc3v3_pcie>;
 		reset-gpios = <&gpio0 RK_PC6 GPIO_ACTIVE_HIGH>;
+		status = "okay";
 		num-lanes = <0x1>;
 		pinctrl-0 = <&pcie30x2_reset_h>;
-		rockchip,perst-inactive-ms = <500>;
-		status = "okay";
 };
 
 &pcie30phy {
@@ -732,66 +687,95 @@
 		status = "okay";
 };
 
+/*使用DSA驱动模型*/
 &mdio0 {
-	status = "okay";
+	#address-cells = <1>;
+    #size-cells = <0>;
+
+	rtl8367s: switch@29 {
+			compatible = "realtek,rtl8365mb";
+			reg = <29>;
+
+			reset-gpios = <&gpio1 RK_PB0 GPIO_ACTIVE_LOW>;
+			pinctrl-names = "default";
+			reset-assert-us = <20000>;
+			reset-deassert-us = <100000>;
+			pinctrl-0 = <&gmac0_reset>;
+
+			ports {
+					#address-cells = <1>;
+					#size-cells = <0>;
+
+					port@0 {
+							reg = <0>;
+							label = "lan1";
+					};
+
+					port@1 {
+							reg = <1>;
+							label = "lan2";
+					};
+
+					port@2 {
+							reg = <2>;
+							label = "lan3";
+					};
+
+					port@3 {
+							reg = <3>;
+							label = "lan4";
+					};
+
+					port@4 {
+							reg = <4>;
+							label = "wan";
+					};
+					port@7 {
+							reg = <7>;
+							ethernet = <&gmac0>;
+							phy-mode = "rgmii";
+							tx-internal-delay-ps = <0>;
+							rx-internal-delay-ps = <0>;
+
+							fixed-link {
+									speed = <1000>;
+									full-duplex;
+							};
+					};
+
+			};
+	};
 };
 
 &gmac0 {
 	status = "okay";
 	phy-mode = "rgmii";
-	snps,reset-gpio = <&gpio1 RK_PB0 GPIO_ACTIVE_LOW>;
-	snps,reset-active-low;
-	snps,reset-delays-us = <0 20000 100000>;
-	assigned-clocks = <&cru SCLK_GMAC0_RX_TX &cru SCLK_GMAC0>;
-	assigned-clock-parents = <&cru SCLK_GMAC0_RGMII_SPEED>;
-	assigned-clock-rates = <0 125000000>;
-	tx_delay = <0x3f>;
-	rx_delay = <0x2c>;
 	clock_in_out = "output";
+	// reset gpio 写到交换机配置里面
+	//snps,reset-gpio = <&gpio1 RK_PB0 GPIO_ACTIVE_LOW>;
+	//snps,reset-active-low;
+	//snps,reset-delays-us = <0x0 20000 100000>;
+	assigned-clocks = <&cru SCLK_GMAC0_RX_TX &cru SCLK_GMAC0>;
+	assigned-clock-parents = <&cru SCLK_GMAC0_RGMII_SPEED &cru CLK_MAC0_2TOP>;
+	assigned-clock-rates = <0x0 125000000>;
+	tx_delay = <0x3c>;
+	rx_delay = <0x2f>;
 	pinctrl-names = "default";
-	pinctrl-0 = <&gmac0_miim &gmac0_tx_bus2 &gmac0_rx_bus2 &gmac0_rgmii_clk &gmac0_rgmii_bus>;
+	pinctrl-0 = <&gmac0_miim &gmac0_tx_bus2 &gmac0_rx_bus2 &gmac0_rgmii_clk &gmac0_rgmii_bus /*&gmac0_reset*/>;
 	fixed-link {
 		speed = <1000>;
 		full-duplex;
+		pause;
 	};
 };
 
-&mdio1 {
-	status = "okay";
-};
 
 &pipe_phy_grf1 {
 	status = "okay";
 };
 
-&combphy1 {
-	rockchip,sgmii-mac-sel = <1>;
-	status = "okay";
-};
 
-&xpcs {
-	status = "disabled";
-};
 
-&gmac1 {
-	status = "disabled";
-	phy-mode = "sgmii";
-	rockchip,pipegrf = <&pipegrf>;
-	rockchip,xpcs = <&xpcs>;
-	//snps,reset-gpio = <&gpio2 RK_PC2 GPIO_ACTIVE_LOW>;
-	//snps,reset-active-low;
-	//snps,reset-delays-us = <0 20000 100000>;
-	assigned-clocks = <&cru SCLK_GMAC1_RX_TX>;
-	assigned-clock-parents = <&gmac1_xpcsclk>;
-	pinctrl-names = "default";
-	pinctrl-0 = <&gmac1m1_miim>;
-	power-domains = <&power RK3568_PD_PIPE>;
-	phys = <&combphy1 PHY_TYPE_SGMII>;
-	fixed-link {
-		speed = <1000>;
-		full-duplex;
-	};
-};
 
 &usb_host0_ehci {
 	status = "okay";
@@ -911,22 +895,9 @@
 	status = "okay";
 };
 
-&gpu {
-	mali-supply = <&vdd_gpu>;
-	status = "okay";
-};
 
-&vpu {
-	status = "okay";
-};
 
-&rga {
-	status = "okay";
-};
 
-&vepu {
-	status = "okay";
-};
 
 &vop {
 	status = "okay";
@@ -990,8 +961,11 @@
 	status = "okay";
 };
 
+/* Add #address-cells, #size-cells */
 &sfc {
 	status = "okay";
+	#address-cells = <1>;  /* One cell for the chip select */
+	#size-cells = <0>;     /* No cell for the size */
 
 	flash@0 {
 		compatible = "spi-nor";
