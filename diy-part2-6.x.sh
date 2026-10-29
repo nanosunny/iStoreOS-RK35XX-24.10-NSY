@@ -17,9 +17,14 @@ cp -a $GITHUB_WORKSPACE/configfiles/etc/* package/base-files/files/etc/
 # ls package/base-files/files/etc/
 
 
-# 追加自定义内核配置项
+# 追加自定义内核配置项 已弃用
+# echo "CONFIG_PSI=y
+# CONFIG_KPROBES=y" >> target/linux/rockchip/armv8/config-6.12
+
+# 动态探测内核版本
+KVER=$(ls target/linux/rockchip/armv8/ | grep -oE 'config-[0-9]+\.[0-9]+' | head -1)
 echo "CONFIG_PSI=y
-CONFIG_KPROBES=y" >> target/linux/rockchip/armv8/config-6.12
+CONFIG_KPROBES=y" >> target/linux/rockchip/armv8/${KVER}
 
 
 # 集成CPU性能跑分脚本
