@@ -41,6 +41,10 @@ CONFIG_KPROBES=y" >> target/linux/rockchip/armv8/config-6.12
 # 定时限速插件
 # git clone --depth=1 https://github.com/sirpdboy/luci-app-eqosplus package/luci-app-eqosplus
 
+# enable rk3568 model adc keys
+cp -f $GITHUB_WORKSPACE/configfiles/adc-keys.txt adc-keys.txt
+! grep -q 'adc-keys {' package/boot/uboot-rk35xx/src/arch/arm/dts/rk3568-easepi.dts && sed -i '/\"rockchip,rk3568\";/r adc-keys.txt' package/boot/uboot-rk35xx/src/arch/arm/dts/rk3568-easepi.dts
+
 # 20261030-16:00 修改
 define Device/rk3568
   SOC := rk3568
