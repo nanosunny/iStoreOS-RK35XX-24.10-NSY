@@ -82,8 +82,8 @@ cp -f $GITHUB_WORKSPACE/configfiles/02_network target/linux/rockchip/armv8/base-
 
 
 # 加入初始化交换机脚本
-cp -f $GITHUB_WORKSPACE/configfiles/swconfig_install package/base-files/files/etc/init.d/swconfig_install
-chmod 755 package/base-files/files/etc/init.d/swconfig_install
+#cp -f $GITHUB_WORKSPACE/configfiles/swconfig_install package/base-files/files/etc/init.d/swconfig_install
+#chmod 755 package/base-files/files/etc/init.d/swconfig_install
 
 
 # 集成 nsy_g68-plus WiFi驱动
