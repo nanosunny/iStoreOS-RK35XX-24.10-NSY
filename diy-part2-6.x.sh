@@ -41,18 +41,28 @@ CONFIG_KPROBES=y" >> target/linux/rockchip/armv8/config-6.12
 # 定时限速插件
 # git clone --depth=1 https://github.com/sirpdboy/luci-app-eqosplus package/luci-app-eqosplus
 
-
-
-# 增加nsy_g68-plus
-echo -e "\\ndefine Device/nsy_g68-plus
-\$(call Device/Legacy/rk3568,\$(1))
+# 20261030-16:00 修改
+define Device/nsy_g68-plus
+  $(call Device/Legacy/rk3568,$(1))
   DEVICE_VENDOR := NSY
   DEVICE_MODEL := G68
   DEVICE_DTS := rk3568/rk3568-nsy-g68-plus
   DEVICE_PACKAGES += kmod-nvme kmod-ata-ahci-dwc kmod-hwmon-pwmfan kmod-thermal kmod-net-dsa-realtek kmod-r8169 kmod-mt7916-firmware
-  # DEVICE_PACKAGES += kmod-nvme kmod-ata-ahci-dwc kmod-hwmon-pwmfan kmod-thermal kmod-switch-rtl8306 kmod-switch-rtl8366-smi kmod-switch-rtl8366rb kmod-switch-rtl8366s kmod-switch-rtl8367b swconfig kmod-swconfig kmod-r8169 kmod-mt7916-firmware
 endef
-TARGET_DEVICES += nsy_g68-plus" >> target/linux/rockchip/image/legacy.mk
+TARGET_DEVICES += nsy_g68-plus
+
+
+
+# 增加nsy_g68-plus 20261030-16:00 修改关闭
+#echo -e "\\ndefine Device/nsy_g68-plus
+#\$(call Device/Legacy/rk3568,\$(1))
+#  DEVICE_VENDOR := NSY
+#  DEVICE_MODEL := G68
+#  DEVICE_DTS := rk3568/rk3568-nsy-g68-plus
+#  DEVICE_PACKAGES += kmod-nvme kmod-ata-ahci-dwc kmod-hwmon-pwmfan kmod-thermal kmod-net-dsa-realtek kmod-r8169 kmod-mt7916-firmware
+  # DEVICE_PACKAGES += kmod-nvme kmod-ata-ahci-dwc kmod-hwmon-pwmfan kmod-thermal kmod-switch-rtl8306 kmod-switch-rtl8366-smi kmod-switch-rtl8366rb kmod-switch-rtl8366s kmod-switch-rtl8367b swconfig kmod-swconfig kmod-r8169 kmod-mt7916-firmware
+#endef
+#TARGET_DEVICES += nsy_g68-plus" >> target/linux/rockchip/image/legacy.mk
 
 
 # 增加nsy_g16-plus
