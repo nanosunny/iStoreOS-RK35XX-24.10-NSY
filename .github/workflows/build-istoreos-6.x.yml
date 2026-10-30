@@ -21,6 +21,8 @@ env:
   UPLOAD_RELEASE: true
   TZ: Asia/Shanghai
   GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+  APK_FORCE_OVERWRITE: "1"     # ← 新增
+  APK_FORCE: overwrite         # ← 新增
 
 jobs:
   build:
