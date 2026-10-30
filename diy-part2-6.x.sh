@@ -50,14 +50,13 @@ endef
 
 # 20261030-16:00 修改
 define Device/nsy_g68-plus
-  $(call Device/Legacy/rk3568,$(1))
+  $(call Device/rk3568)
   DEVICE_VENDOR := NSY
   DEVICE_MODEL := G68
   DEVICE_DTS := rk3568/rk3568-nsy-g68-plus
   DEVICE_PACKAGES += kmod-nvme kmod-ata-ahci-dwc kmod-hwmon-pwmfan kmod-thermal kmod-net-dsa-realtek kmod-r8169 kmod-mt7916-firmware
 endef
 TARGET_DEVICES += nsy_g68-plus
-
 
 
 # 增加nsy_g68-plus 20261030-16:00 修改关闭
