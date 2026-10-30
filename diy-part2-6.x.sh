@@ -42,6 +42,13 @@ CONFIG_KPROBES=y" >> target/linux/rockchip/armv8/config-6.12
 # git clone --depth=1 https://github.com/sirpdboy/luci-app-eqosplus package/luci-app-eqosplus
 
 # 20261030-16:00 修改
+define Device/rk3568
+  SOC := rk3568
+  UBOOT_DEVICE_NAME := easepi-rk3568    # 使用 easepi-rk3568 的 U-Boot
+  IMAGE/sysupgrade.img.gz := boot-common | boot-script rk3568 | pine64-img | gzip | append-metadata
+endef
+
+# 20261030-16:00 修改
 define Device/nsy_g68-plus
   $(call Device/Legacy/rk3568,$(1))
   DEVICE_VENDOR := NSY
