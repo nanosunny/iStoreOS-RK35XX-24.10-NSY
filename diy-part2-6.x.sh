@@ -116,13 +116,13 @@ cp -a $GITHUB_WORKSPACE/configfiles/dts/rk3568/* target/linux/rockchip/dts/rk356
 
 # ===== 修复：阻止 feeds 版 nginx-ssl-util 覆盖 iStoreOS 自带的 nginx 配置 =====
 # 1) 先删掉 nginx-util 包里那两个冲突文件的安装指令
-find feeds -path "*/nginx-util/Makefile" 2>/dev/null | while read mk; do
-    sed -i 's|^[^#]*etc/config/nginx[[:space:]]*\\||g; s|^[^#]*etc/nginx/uci.conf.template[[:space:]]*\\||g' "$mk"
+#find feeds -path "*/nginx-util/Makefile" 2>/dev/null | while read mk; do
+#    sed -i 's|^[^#]*etc/config/nginx[[:space:]]*\\||g; s|^[^#]*etc/nginx/uci.conf.template[[:space:]]*\\||g' "$mk"
     # 同时把这两个文件从 conffiles 里删
-    sed -i '/etc\/config\/nginx/d; /etc\/nginx\/uci.conf.template/d' "$mk"
-done
+#    sed -i '/etc\/config\/nginx/d; /etc\/nginx\/uci.conf.template/d' "$mk"
+#done
 # 2) 若 feeds 里的包 Makefile 还有 CONFLICTS 字段，避免冲突检测
-find feeds -path "*/nginx-util/Makefile" -o -path "*/nginx/Makefile" 2>/dev/null | while read mk; do
-    # 追加一行给它标注成与 base-files 无冲突（可选）
-    grep -q "^CONFLICTS:=" "$mk" && echo 'CONFLICTS+= base-files' >> "$mk"
-done
+#find feeds -path "*/nginx-util/Makefile" -o -path "*/nginx/Makefile" 2>/dev/null | while read mk; do
+#    # 追加一行给它标注成与 base-files 无冲突（可选）
+#    grep -q "^CONFLICTS:=" "$mk" && echo 'CONFLICTS+= base-files' >> "$mk"
+#done
